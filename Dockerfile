@@ -1,24 +1,20 @@
-FROM node:12.18.4-alpine
-This will be our base image for the container.
+# Use an official Node runtime as the base image
+FROM node:14
 
-WORKDIR /app
-This will be set as a working directory in the container.
+# Set the working directory in the container
+WORKDIR /usr/src/app
 
-ENV PATH /app/node_modules/.bin:$PATH
-PATH variable is assigned a path to /app/node_modules/.bin.
+# Copy package.json and package-lock.json (if available)
+COPY package*.json ./
 
-COPY package.json ./
-Package.json will be copied in the working directory of the container.
-
+# Install app dependencies
 RUN npm install
-Install dependencies.
 
-COPY . ./
+# Bundle app source inside the Docker image
+COPY . .
 
-Copy files and folders with dependencies from the host machine to the container.
-
+# Your app binds to port 3000, so you'll use the EXPOSE instruction to have it mapped by the docker daemon
 EXPOSE 3000
-Allow to port 300 of the container.
 
-CMD [“node”, “./src/server.js”]
-Start the application
+# Define command to run your app
+CMD ["node", "app.js"]
