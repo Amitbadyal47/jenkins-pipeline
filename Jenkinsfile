@@ -17,15 +17,18 @@ pipeline {
             }
         }
         stage('Push to ECR') {
-            steps {
-                script {
-                    sh 'aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/f0c8t3z1'
-                    docker.withRegistry('', 'ecr:us-east-1:949108207608') {
-                        docker.image(IMAGE_TAG).push()
-                    }
+    steps {
+        script {
+            withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'demo-admin-user']]) {
+                sh 'aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com'
+                docker.withRegistry('', 'ecr:us-east-1:949108207608') {
+                    docker.image(IMAGE_TAG).push()
                 }
             }
         }
+    }
+}
+
         stage('Deploy to ECS') {
             steps {
                 script {
