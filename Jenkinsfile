@@ -20,7 +20,7 @@ pipeline {
             steps {
                 script {
                     sh 'aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com'
-                    docker.withRegistry('', 'ecr:us-east-1:your_aws_account_id') {
+                    docker.withRegistry('', 'ecr:us-east-1:949108207608') {
                         docker.image(IMAGE_TAG).push()
                     }
                 }
