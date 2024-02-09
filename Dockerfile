@@ -1,23 +1,24 @@
-# Use an official Node runtime as a parent image
-FROM node:14
+FROM node:12.18.4-alpine
+This will be our base image for the container.
 
-# Set the working directory in the container
-WORKDIR /usr/src/app
+WORKDIR /app
+This will be set as a working directory in the container.
 
-# Copy package.json and package-lock.json
-COPY package*.json ./
+ENV PATH /app/node_modules/.bin:$PATH
+PATH variable is assigned a path to /app/node_modules/.bin.
 
-# Install any needed packages specified in package.json
+COPY package.json ./
+Package.json will be copied in the working directory of the container.
+
 RUN npm install
+Install dependencies.
 
-# Bundle app source inside the Docker image
-COPY . .
+COPY . ./
 
-# Make port 80 available to the world outside this container
-EXPOSE 80
+Copy files and folders with dependencies from the host machine to the container.
 
-# Define environment variable
-ENV NAME World
+EXPOSE 3000
+Allow to port 300 of the container.
 
-# Run app.js when the container launches
-CMD ["node", "app.js"]
+CMD [“node”, “./src/server.js”]
+Start the application
